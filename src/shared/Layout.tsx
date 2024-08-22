@@ -1,10 +1,13 @@
 import { Button } from "@chakra-ui/react";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { BsGrid1X2Fill } from "react-icons/bs";
 import { FaShapes, FaUserGroup, FaCube } from "react-icons/fa6";
 import { MdStars } from "react-icons/md";
 import { FaFileAlt } from "react-icons/fa";
 import { MdComment } from "react-icons/md";
+import { useEffect } from "react";
+import { useAuthStore } from "../features/auth/hooks/useAuthStore";
+import { IoMdExit } from "react-icons/io";
 
 const links = [
   {
@@ -46,6 +49,19 @@ const links = [
 
 function App() {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const currentSession = useAuthStore((state) => state.session);
+  const logout = useAuthStore((state) => state.logout);
+  useEffect(() => {
+    if (!currentSession) {
+      navigate("/login");
+    }
+  }, [currentSession]);
+
+  if (!currentSession) {
+    return null;
+  }
+
   return (
     <div className="flex h-screen gap-10 overflow-hidden">
       <div className="flex h-full basis-72 flex-col gap-5 border-r border-slate-300 p-3">
@@ -58,15 +74,18 @@ function App() {
                 variant="ghost"
                 colorScheme="green"
                 className="w-full justify-start"
+                isActive={pathname === link.to}
               >
                 <span className="w-full text-left">{link.title}</span>
               </Button>
             </Link>
           ))}
         </nav>
-        <Button colorScheme="green">Iskandarov Bobomurod</Button>
+        <Button colorScheme="green" onClick={logout} rightIcon={<IoMdExit />}>
+          {currentSession?.user.user_metadata.full_name}
+        </Button>
       </div>
-      <div className="h-full overflow-auto p-10">
+      <div className="h-full w-full overflow-auto p-10">
         <Outlet />
       </div>
     </div>
