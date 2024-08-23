@@ -1,24 +1,31 @@
 import {
-  IconButton,
-  Switch,
+  Skeleton,
   Table,
   TableContainer,
   Tbody,
-  Td,
   Th,
   Thead,
   Tr,
+  Td,
 } from "@chakra-ui/react";
-import { FaTrashAlt } from "react-icons/fa";
-import { MdEdit } from "react-icons/md";
+import { IProduct } from "../interfaces/IProduct";
+import ProductRow from "./ProductRow";
+import { LazyLoadComponent } from "react-lazy-load-image-component";
 
-function ProductTable() {
+function ProductTable({
+  products,
+  isLoading,
+}: {
+  products: IProduct[];
+  isLoading?: boolean;
+}) {
   return (
-    <TableContainer width="100%">
-      <Table variant="stripped" colorScheme="green">
-        <Thead>
-          <Tr>
+    <TableContainer width="100%" className="overflow-hidden rounded-lg">
+      <Table variant="stripped" colorScheme="green" className="">
+        <Thead className="bg-slate-100">
+          <Tr className="divide-x divide-slate-400/20">
             <Th>№</Th>
+            <Th>Image</Th>
             <Th>Name</Th>
             <Th>Price</Th>
             <Th>Brand</Th>
@@ -26,30 +33,29 @@ function ProductTable() {
             <Th>Actions</Th>
           </Tr>
         </Thead>
-        <Tbody>
-          <Tr>
-            <Td>1</Td>
-            <Td>IPhone 13</Td>
-            <Td>$1099.99</Td>
-            <Td>Apple</Td>
-            <Td>
-              <Switch colorScheme="green" />
-            </Td>
-            <Td display="flex" gap="10px">
-              <IconButton
-                aria-label="edit-product"
-                icon={<MdEdit />}
-                size="sm"
-              />
-              <IconButton
-                aria-label="delete-product"
-                icon={<FaTrashAlt />}
-                colorScheme="red"
-                size="sm"
-              />
-            </Td>
-          </Tr>
-        </Tbody>
+        {isLoading && (
+          <Tbody className="">
+            {new Array(10).fill(0).map((_, index) => (
+              <Tr key={index}>
+                {new Array(7).fill(0).map((_, index) => (
+                  <Td key={index}>
+                    <Skeleton className="h-[15px] w-full" />
+                  </Td>
+                ))}
+              </Tr>
+            ))}
+          </Tbody>
+        )}
+
+        {!isLoading && (
+          <Tbody className="relative divide-y">
+            {products?.map((product) => (
+              <LazyLoadComponent>
+                <ProductRow product={product} key={product.id} />
+              </LazyLoadComponent>
+            ))}
+          </Tbody>
+        )}
       </Table>
     </TableContainer>
   );

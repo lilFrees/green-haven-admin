@@ -60,10 +60,12 @@ function App() {
 
   if (!currentSession) {
     return null;
+  } else if (currentSession && pathname === "/") {
+    navigate("/dashboard");
   }
 
   return (
-    <div className="flex h-screen gap-10 overflow-hidden">
+    <div className="flex h-screen overflow-y-hidden">
       <div className="flex h-full basis-72 flex-col gap-5 border-r border-slate-300 p-3">
         <h2 className="text-xl font-bold">Green Haven</h2>
         <nav className="flex w-full grow flex-col gap-3">

@@ -12,9 +12,9 @@ export async function login({ email, password }: FormDataType) {
     throw new Error(error.message);
   }
 
-  if (data.user.role === "admin" || data.user.role === "maintainer") {
-    return data.session;
-  } else {
-    throw new Error("You don't have access to this domain");
+  if (data.user.user_metadata.isAdmin) return data.session;
+  else {
+    console.log(data.user);
+    throw new Error("You don't have permission to access this domain");
   }
 }

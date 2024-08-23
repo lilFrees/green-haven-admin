@@ -13,6 +13,7 @@ import DashboardPage from "./features/dashboard/pages/DashboardPage.tsx";
 import BrandsPage from "./features/brands/pages/BrandsPage.tsx";
 import ErrorPage from "./shared/ErrorPage.tsx";
 import LoginPage from "./features/auth/pages/LoginPage.tsx";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 const browserRouter = createBrowserRouter([
   {
@@ -57,10 +58,14 @@ const browserRouter = createBrowserRouter([
   },
 ]);
 
+const queryClient = new QueryClient();
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ChakraProvider>
-      <RouterProvider router={browserRouter} />
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={browserRouter} />
+      </QueryClientProvider>
     </ChakraProvider>
   </StrictMode>,
 );
