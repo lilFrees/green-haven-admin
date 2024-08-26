@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import Layout from "./shared/Layout.tsx";
+import Layout from "./shared/components/Layout.tsx";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ChakraProvider } from "@chakra-ui/react";
@@ -11,7 +11,7 @@ import ReviewsPage from "./features/reviews/pages/ReviewsPage.tsx";
 import UsersPage from "./features/users/pages/UsersPage.tsx";
 import DashboardPage from "./features/dashboard/pages/DashboardPage.tsx";
 import BrandsPage from "./features/brands/pages/BrandsPage.tsx";
-import ErrorPage from "./shared/ErrorPage.tsx";
+import ErrorPage from "./shared/components/ErrorPage.tsx";
 import LoginPage from "./features/auth/pages/LoginPage.tsx";
 import { QueryClient, QueryClientProvider } from "react-query";
 

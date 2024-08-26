@@ -1,4 +1,4 @@
-import { IconButton, Switch, Td, Tr } from "@chakra-ui/react";
+import { IconButton, Switch, Td, Tr, Tooltip } from "@chakra-ui/react";
 import { useCallback, useState } from "react";
 import { FaTrashAlt } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
@@ -19,7 +19,7 @@ const ProductRow = memo(({ product }: { product: IProduct }) => {
     <Tr>
       <Td>{product.id}</Td>
       <Td>
-        <div className="h-10 w-10">
+        <div className="h-9 w-9">
           <LazyLoadImage
             src={product.thumbnail}
             className="h-full w-full object-contain"
@@ -28,7 +28,13 @@ const ProductRow = memo(({ product }: { product: IProduct }) => {
           />
         </div>
       </Td>
-      <Td>{product.title}</Td>
+      <Td className="block w-[14rem] overflow-hidden overflow-ellipsis whitespace-nowrap">
+        <span tabIndex={0}>
+          <Tooltip hasArrow label={product.title} aria-label="product-title">
+            {product.title}
+          </Tooltip>
+        </span>
+      </Td>
       <Td>${product.price}</Td>
       <Td>{product.brand}</Td>
       <Td>

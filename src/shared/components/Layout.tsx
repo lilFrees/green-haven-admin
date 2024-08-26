@@ -6,8 +6,8 @@ import { MdStars } from "react-icons/md";
 import { FaFileAlt } from "react-icons/fa";
 import { MdComment } from "react-icons/md";
 import { useEffect } from "react";
-import { useAuthStore } from "../features/auth/hooks/useAuthStore";
 import { IoMdExit } from "react-icons/io";
+import { useAuthStore } from "../../features/auth/hooks/useAuthStore";
 
 const links = [
   {
@@ -67,7 +67,7 @@ function App() {
   return (
     <div className="flex h-screen overflow-y-hidden">
       <div className="flex h-full basis-72 flex-col gap-5 border-r border-slate-300 p-3">
-        <h2 className="text-xl font-bold">Green Haven</h2>
+        <h2 className="text-xl font-bold">Green Haven Admin</h2>
         <nav className="flex w-full grow flex-col gap-3">
           {links.map((link) => (
             <Link key={link.to} to={link.to}>

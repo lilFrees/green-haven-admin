@@ -1,6 +1,4 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import { supabase } from "../../auth/services/supabase";
-import useFilter from "../hooks/useFilter";
 import { IProduct } from "../interfaces/IProduct";
 
 export async function getProducts({
@@ -19,7 +17,7 @@ export async function getProducts({
 
   if (searchQuery) {
     query = query.or(
-      `title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`,
+      `title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%,category.ilike.%${searchQuery}%`,
     );
   }
 

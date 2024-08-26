@@ -1,27 +1,26 @@
 import { useState } from "react";
 import { useQuery } from "react-query";
-import { getProducts } from "../services/products-service";
-import { useProductFilter } from "./useProductFilter";
+import { useCategoryFilter } from "./useCategoryFilter";
+import { getCategories } from "../services/category-service";
 
-const useProducts = () => {
-  const filter = useProductFilter((state) => state);
+const useCategories = () => {
+  const filter = useCategoryFilter((state) => state);
   const [maxPages, setMaxPages] = useState<number>(0);
 
   const { page, limit, searchQuery, setCount } = filter;
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["products", { page, limit, searchQuery }],
+    queryKey: ["categories", { page, limit, searchQuery }],
     queryFn: async () => {
-      const data = await getProducts({ page, limit, searchQuery });
+      const data = await getCategories({ page, limit, searchQuery });
       setCount(data.count);
       setMaxPages(Math.ceil(data.count / limit));
       return data;
     },
   });
-  const products = data?.products;
 
   return {
-    products,
+    categories: data?.categories,
     isLoading,
     isError,
     maxPages,
@@ -29,4 +28,4 @@ const useProducts = () => {
   };
 };
 
-export default useProducts;
+export default useCategories;
