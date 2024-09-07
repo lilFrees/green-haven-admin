@@ -50,9 +50,7 @@ function ProductTable({
         {!isLoading && (
           <Tbody className="relative divide-y">
             {products?.map((product) => (
-              <LazyLoadComponent>
-                <ProductRow product={product} key={product.id} />
-              </LazyLoadComponent>
+              <ProductRow product={product} key={product.id} />
             ))}
           </Tbody>
         )}

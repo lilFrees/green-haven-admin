@@ -55,14 +55,10 @@ function App() {
   useEffect(() => {
     if (!currentSession) {
       navigate("/login");
+    } else if (pathname === "/") {
+      navigate("/dashboard");
     }
   }, [currentSession]);
-
-  if (!currentSession) {
-    return null;
-  } else if (currentSession && pathname === "/") {
-    navigate("/dashboard");
-  }
 
   return (
     <div className="flex h-screen overflow-y-hidden">

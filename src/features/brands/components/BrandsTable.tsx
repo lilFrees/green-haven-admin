@@ -8,15 +8,15 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { ICategory } from "../interfaces/ICategory";
-import CategoryRow from "./CategoryRow";
+import { IBrand } from "../interfaces/IBrand";
+import BrandRow from "./BrandRow";
 
-function CategoriesTable({
-  categories,
+function BrandsTable({
   isLoading,
+  brands,
 }: {
-  categories?: ICategory[] | undefined;
   isLoading: boolean;
+  brands?: IBrand[] | undefined;
 }) {
   return (
     <TableContainer>
@@ -48,9 +48,9 @@ function CategoriesTable({
               </Tr>
             ))}
           {!isLoading &&
-            categories &&
-            categories.map((category, index) => (
-              <CategoryRow key={index} category={category} />
+            brands &&
+            brands.map((brand, index) => (
+              <BrandRow key={index} brand={brand} />
             ))}
         </Tbody>
       </Table>
@@ -58,4 +58,4 @@ function CategoriesTable({
   );
 }
 
-export default CategoriesTable;
+export default BrandsTable;

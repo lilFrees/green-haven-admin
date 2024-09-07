@@ -73,7 +73,7 @@ function CategoriesPage() {
           className="mt-auto flex items-center justify-end gap-2"
           activeLinkClassName="bg-green-500 text-white"
           renderOnZeroPageCount={({ pageClassName }) => (
-            <div className={pageClassName}>No more pages</div>
+            <div className={pageClassName}>No pages</div>
           )}
         />
         <div className="w-30">
