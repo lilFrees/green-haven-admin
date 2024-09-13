@@ -8,8 +8,6 @@ export async function getUsers() {
 
   if (error) throw error;
 
-  console.log(data);
-  console.log(error);
 
   return data as IUser[];
 }

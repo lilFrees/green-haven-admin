@@ -1,12 +1,11 @@
 import { Button } from "@chakra-ui/react";
-import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { BsGrid1X2Fill } from "react-icons/bs";
-import { FaShapes, FaUserGroup, FaCube } from "react-icons/fa6";
-import { MdStars } from "react-icons/md";
-import { FaFileAlt } from "react-icons/fa";
-import { MdComment } from "react-icons/md";
 import { useEffect } from "react";
+import { BsGrid1X2Fill } from "react-icons/bs";
+import { FaFileAlt } from "react-icons/fa";
+import { FaCube, FaShapes, FaUserGroup } from "react-icons/fa6";
 import { IoMdExit } from "react-icons/io";
+import { MdStars } from "react-icons/md";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../features/auth/hooks/useAuthStore";
 
 const links = [
@@ -40,11 +39,6 @@ const links = [
     title: "Orders",
     icon: <FaFileAlt />,
   },
-  {
-    to: "/reviews",
-    title: "Reviews",
-    icon: <MdComment />,
-  },
 ];
 
 function App() {
@@ -58,7 +52,7 @@ function App() {
     } else if (pathname === "/") {
       navigate("/dashboard");
     }
-  }, [currentSession]);
+  }, [currentSession, navigate, pathname]);
 
   return (
     <div className="flex h-screen overflow-y-hidden">

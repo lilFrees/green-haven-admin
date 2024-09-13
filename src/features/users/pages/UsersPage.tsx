@@ -11,7 +11,6 @@ function UsersPage() {
     queryKey: "users",
     queryFn: async () => {
       const data = await getUsers();
-      console.log(data);
       return data;
     },
   });

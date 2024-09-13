@@ -13,7 +13,6 @@ export async function login({ email, password }: FormDataType) {
 
   if (data.user.user_metadata.is_admin) return data.session;
   else {
-    console.log(data.user);
     throw new Error("You don't have permission to access this domain");
   }
 }

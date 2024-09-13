@@ -16,6 +16,8 @@ import "./index.css";
 import ErrorPage from "./shared/components/ErrorPage.tsx";
 import Layout from "./shared/components/Layout.tsx";
 import Providers from "./shared/components/Providers.tsx";
+import UpdateBrandPage from "./features/brands/pages/UpdateBrandPage.tsx";
+import CreateBrandPage from "./features/brands/pages/CreateBrandPage.tsx";
 
 const browserRouter = createBrowserRouter([
   {
@@ -55,6 +57,14 @@ const browserRouter = createBrowserRouter([
       {
         path: "/brands",
         element: <BrandsPage />,
+      },
+      {
+        path: "/brands/:brandId",
+        element: <UpdateBrandPage />,
+      },
+      {
+        path: "/brands/create",
+        element: <CreateBrandPage />,
       },
       {
         path: "/users",

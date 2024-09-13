@@ -12,6 +12,7 @@ import { FaRegCircleXmark } from "react-icons/fa6";
 import ReactPaginate from "react-paginate";
 import useBrands from "../hooks/useBrands";
 import BrandsTable from "../components/BrandsTable";
+import { Link } from "react-router-dom";
 
 function BrandsPage() {
   const {
@@ -47,7 +48,9 @@ function BrandsPage() {
           </InputRightElement>
         </InputGroup>
 
-        <Button colorScheme="green">New</Button>
+        <Link to="/brands/create">
+          <Button colorScheme="green">New</Button>
+        </Link>
       </div>
 
       <BrandsTable brands={brands} isLoading={isLoading} />

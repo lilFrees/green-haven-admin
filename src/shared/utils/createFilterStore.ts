@@ -1,12 +1,12 @@
 import { create } from "zustand";
 
-type FilterState<T extends string> = {
+type FilterState<T> = {
   searchQuery: string;
   page: number;
   limit: number;
   count: number;
   ascending: boolean;
-  orderBy: string;
+  orderBy: T;
   setPage: (page: number) => void;
   nextPage: () => void;
   prevPage: () => void;

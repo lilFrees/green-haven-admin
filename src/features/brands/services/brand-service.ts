@@ -1,7 +1,7 @@
 "use server";
 
 import { supabase } from "../../../shared/supabase/client";
-import { IBrandWithCount } from "../interfaces/IBrand";
+import { IBrand, IBrandWithCount } from "../interfaces/IBrand";
 
 export async function getBrands({
   page,
@@ -39,4 +39,18 @@ export async function getBrands({
   }
 
   return { brands: data, count };
+}
+
+export async function getBrandById(brandId: number): Promise<IBrand> {
+  const { data, error } = await supabase
+    .from("brands")
+    .select("*")
+    .eq("id", brandId)
+    .single();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
 }

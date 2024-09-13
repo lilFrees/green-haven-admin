@@ -1,14 +1,15 @@
 import { IconButton } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
-import { useCategoryImage } from "../hooks/useCategoryImage";
 import { MdEdit } from "react-icons/md";
 import { FaPlus, FaTrash } from "react-icons/fa6";
+import { useBrandImage } from "../hooks/useBrandImage";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
-const SingleImagePicker = ({ initialImage }: { initialImage?: string }) => {
+const BrandImagePicker = ({ initialImage }: { initialImage?: string }) => {
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const { image, removeImage, setImage } = useCategoryImage();
+  const { image, removeImage, setImage } = useBrandImage();
 
   useEffect(() => {
     const fetchImage = async (url: string) => {
@@ -34,7 +35,7 @@ const SingleImagePicker = ({ initialImage }: { initialImage?: string }) => {
     fileInputRef.current?.click();
   };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (event) => {
     const file = event.target.files?.[0];
     if (file) {
       if (file.type.startsWith("image/")) {
@@ -65,11 +66,11 @@ const SingleImagePicker = ({ initialImage }: { initialImage?: string }) => {
   return (
     <div className="flex w-full items-center justify-center rounded-3xl border-4 border-dashed border-slate-300 p-5">
       {image ? (
-        <div className="group relative h-72 w-full">
-          <img
+        <div className="group relative h-72 w-72">
+          <LazyLoadImage
             src={image.url}
             alt="Selected image"
-            className="h-full w-full object-cover"
+            className="h-full w-full object-contain"
           />
           <div className="absolute inset-0 hidden items-center justify-center gap-5 bg-black/50 group-hover:flex">
             <IconButton
@@ -111,4 +112,4 @@ const SingleImagePicker = ({ initialImage }: { initialImage?: string }) => {
   );
 };
 
-export default SingleImagePicker;
+export default BrandImagePicker;

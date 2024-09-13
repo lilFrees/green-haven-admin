@@ -13,24 +13,23 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import imageCompression, { Options } from "browser-image-compression";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useQuery } from "react-query";
+import { useNavigate } from "react-router-dom";
 import { z } from "zod";
+import OptionsList from "../../../../shared/components/OptionsList";
+import { supabase } from "../../../../shared/supabase/client";
+import { convertToWebp } from "../../../../shared/utils/convertToWebp";
+import { IBrand } from "../../../brands/interfaces/IBrand";
+import { ICategory } from "../../../categories/interfaces/ICategory";
 import { useUpdateImageStore } from "../../hooks/useUpdateImageStore";
 import { IProduct } from "../../interfaces/IProduct";
-import ImagePicker from "./ImagePicker";
-import { supabase } from "../../../../shared/supabase/client";
-import { useQuery } from "react-query";
 import {
   getBrandsByName,
   getCategoriesByName,
 } from "../../services/products-service";
-import OptionsList from "../../../../shared/components/OptionsList";
-import { useEffect, useState } from "react";
-import { ICategory } from "../../../categories/interfaces/ICategory";
-import { IBrand } from "../../../brands/interfaces/IBrand";
-import { convertToWebp } from "../../../../shared/utils/convertToWebp";
+import ImagePicker from "./ImagePicker";
 
 const schema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters long"),
@@ -158,7 +157,6 @@ function UpdateForm({ product }: { product: IProduct }) {
       }),
     );
 
-    console.log(convertedImg);
 
     const { error } = await supabase
       .from("products")

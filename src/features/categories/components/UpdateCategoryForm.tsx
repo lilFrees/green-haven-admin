@@ -9,6 +9,7 @@ import {
   FormErrorMessage,
   FormLabel,
   Input,
+  Spinner,
   Textarea,
   useToast,
 } from "@chakra-ui/react";
@@ -44,6 +45,13 @@ function UpdateCategoryForm({
   } = useForm<CategoryData>({
     resolver: zodResolver(schema),
   });
+  if (isLoading)
+    return (
+      <div className="flex flex-col gap-5">
+        <Spinner size="sm" />
+        <h2>Loading the category...</h2>
+      </div>
+    );
 
   async function onSubmit(data: CategoryData) {
     const { data: updateData, error: updateError } = await supabase

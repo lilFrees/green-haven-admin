@@ -213,7 +213,6 @@ function CreateForm() {
         } = supabase.storage
           .from("product_images")
           .getPublicUrl(`product-id-${newProductId}/image-${i}.webp`);
-        console.log(publicUrl);
 
         return publicUrl;
       }),
@@ -238,8 +237,6 @@ function CreateForm() {
       });
       return;
     }
-
-    console.log(insertData);
 
     toast({
       title: "Product created successfully",
