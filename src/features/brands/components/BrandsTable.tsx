@@ -8,30 +8,43 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { IBrand } from "../interfaces/IBrand";
+import { IAdminBrand } from "../interfaces/IBrand";
+import OrderRow from "./BrandRow";
 import BrandRow from "./BrandRow";
+import { useBrandFilter } from "../hooks/useBrandFilter";
 
 function BrandsTable({
   isLoading,
   brands,
 }: {
   isLoading: boolean;
-  brands?: IBrand[] | undefined;
+  brands?: IAdminBrand[] | undefined;
 }) {
+  const { setAscending, setOrderBy, ascending } = useBrandFilter();
+
+  function handleSortBy(orderBy: string) {
+    setOrderBy(orderBy);
+    setAscending(true);
+  }
+
+  function handleToggleSort() {
+    setAscending(!ascending);
+  }
+
   return (
     <TableContainer>
-      <Table>
+      <Table size="sm">
         <Thead>
           <Tr>
-            <Th>№</Th>
-            <Th>Name</Th>
-            <Th>Products count</Th>
+            <Th onClick={() => handleSortBy("id")}>№</Th>
+            <Th onClick={() => handleSortBy("name")}>Name</Th>
+            <Th onClick={() => handleSortBy("count")}>Products count</Th>
             <Th>Actions</Th>
           </Tr>
         </Thead>
-        <Tbody>
-          {isLoading &&
-            new Array(10).fill(0).map((_, index) => (
+        {isLoading && (
+          <Tbody>
+            {new Array(10).fill(0).map((_, index) => (
               <Tr key={index}>
                 <Td>
                   <Skeleton className="h-[15px] w-full" />
@@ -47,12 +60,16 @@ function BrandsTable({
                 </Td>
               </Tr>
             ))}
-          {!isLoading &&
-            brands &&
-            brands.map((brand, index) => (
+          </Tbody>
+        )}
+
+        {!isLoading && brands && (
+          <Tbody>
+            {brands.map((brand, index) => (
               <BrandRow key={index} brand={brand} />
             ))}
-        </Tbody>
+          </Tbody>
+        )}
       </Table>
     </TableContainer>
   );

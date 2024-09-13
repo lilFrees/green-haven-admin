@@ -1,31 +1,29 @@
-import { useEffect, useState } from "react";
-import { getAllUsers } from "../services/user-service";
+"use client";
+
+import { Spinner } from "@chakra-ui/react";
+import { Suspense } from "react";
 import { useQuery } from "react-query";
-import axios from "axios";
+import { getUsers } from "../services/user-service";
+import UsersTable from "../components/UserTable";
 
 function UsersPage() {
-  const [users, setUsers] = useState<any[]>([]);
-  // useEffect(() => {
-  //   async function fetchUsers() {
-  //     const data = await getAllUsers();
-  //     setUsers(data);
-  //   }
-
-  //   fetchUsers();
-  // });
-
-  const { data, isLoading, isError } = useQuery({
+  const { data: users, isLoading } = useQuery({
     queryKey: "users",
     queryFn: async () => {
-      const data = axios.get("http://localhost:5000/api/getAllUsers", {
-        params: {
-          isAdmin: true,
-        },
-      });
+      const data = await getUsers();
+      console.log(data);
+      return data;
     },
   });
 
-  return <div className="text-3xl">Users</div>;
+  return (
+    <div>
+      <h1>Users</h1>
+      <Suspense fallback={<Spinner />}>
+        <UsersTable users={users} isLoading={isLoading} />
+      </Suspense>
+    </div>
+  );
 }
 
 export default UsersPage;

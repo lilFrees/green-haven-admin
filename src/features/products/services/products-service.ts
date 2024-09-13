@@ -1,4 +1,6 @@
-import { supabase } from "../../auth/services/supabase";
+import { supabase } from "../../../shared/supabase/client";
+import { ICategory } from "../../categories/interfaces/ICategory";
+import { IAdminProduct } from "../interfaces/IAdminProducts";
 import { IProduct } from "../interfaces/IProduct";
 
 export async function getProducts({
@@ -9,15 +11,18 @@ export async function getProducts({
   page: number;
   limit: number;
   searchQuery?: string;
-}): Promise<{ products: IProduct[]; count: number }> {
+}): Promise<{
+  products: IAdminProduct[];
+  count: number;
+}> {
   let query = supabase
-    .from("products")
+    .from("admin_products")
     .select("*")
-    .order("id", { ascending: true });
+    .order("product_id", { ascending: true });
 
   if (searchQuery) {
     query = query.or(
-      `title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%,category.ilike.%${searchQuery}%`,
+      `product_name.ilike.%${searchQuery}%,product_description.ilike.%${searchQuery}%,category_name.ilike.%${searchQuery}%,brand_name.ilike.%${searchQuery}%`,
     );
   }
 
@@ -55,4 +60,55 @@ export async function toggleActiveStatus(
   }
 
   return data.is_active;
+}
+
+export async function getProductById(id: number): Promise<IProduct | null> {
+  const { data, error } = await supabase
+    .from("products")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    return null;
+  }
+
+  return data;
+}
+
+export async function getCategoriesByName(): Promise<ICategory[]> {
+  const { data, error } = await supabase.from("categories").select("*");
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+}
+
+export async function getBrandsByName() {
+  const { data, error } = await supabase.from("brands").select("*");
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+}
+
+export async function deleteProduct(id: number): Promise<boolean> {
+  const { error: imageError } = await supabase.storage
+    .from("product_images")
+    .remove([`product-id-${id}`]);
+  if (imageError) {
+    throw new Error(imageError.message);
+  }
+
+  const { error } = await supabase.from("products").delete().eq("id", id);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return true;
 }

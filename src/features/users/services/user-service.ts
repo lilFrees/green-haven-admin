@@ -1,9 +1,15 @@
-import { supabase } from "../../auth/services/supabase";
+"use server";
 
-export async function getAllUsers() {
-  const { data, error } = await supabase.rpc("get_all_users");
+import { supabase } from "../../../shared/supabase/client";
+import { IUser } from "../interface/IUser";
+
+export async function getUsers() {
+  const { data, error } = await supabase.from("admin_users").select("*");
 
   if (error) throw error;
 
-  return data;
+  console.log(data);
+  console.log(error);
+
+  return data as IUser[];
 }

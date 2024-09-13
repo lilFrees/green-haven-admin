@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useQuery } from "react-query";
-import { useBrandFilter } from "./useBrandFilter";
+
 import { getBrands } from "../services/brand-service";
+import { useBrandFilter } from "./useBrandFilter";
 
 const useBrands = () => {
   const filter = useBrandFilter((state) => state);

@@ -1,19 +1,21 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import Layout from "./shared/components/Layout.tsx";
-import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { ChakraProvider } from "@chakra-ui/react";
-import OrdersPage from "./features/orders/pages/OrdersPage.tsx";
-import CategoriesPage from "./features/categories/pages/CategoriesPage.tsx";
-import ProductsPage from "./features/products/pages/ProductsPage.tsx";
-import ReviewsPage from "./features/reviews/pages/ReviewsPage.tsx";
-import UsersPage from "./features/users/pages/UsersPage.tsx";
-import DashboardPage from "./features/dashboard/pages/DashboardPage.tsx";
-import BrandsPage from "./features/brands/pages/BrandsPage.tsx";
-import ErrorPage from "./shared/components/ErrorPage.tsx";
 import LoginPage from "./features/auth/pages/LoginPage.tsx";
-import { QueryClient, QueryClientProvider } from "react-query";
+import BrandsPage from "./features/brands/pages/BrandsPage.tsx";
+import CategoriesPage from "./features/categories/pages/CategoriesPage.tsx";
+import CreateCategory from "./features/categories/pages/CreateCategory.tsx";
+import UpdateCategory from "./features/categories/pages/UpdateCategory.tsx";
+import DashboardPage from "./features/dashboard/pages/DashboardPage.tsx";
+import OrdersPage from "./features/orders/pages/OrdersPage.tsx";
+import CreateProduct from "./features/products/pages/CreateProduct.tsx";
+import ProductsPage from "./features/products/pages/ProductsPage.tsx";
+import UpdateProduct from "./features/products/pages/UpdateProduct.tsx";
+import UsersPage from "./features/users/pages/UsersPage.tsx";
+import "./index.css";
+import ErrorPage from "./shared/components/ErrorPage.tsx";
+import Layout from "./shared/components/Layout.tsx";
+import Providers from "./shared/components/Providers.tsx";
 
 const browserRouter = createBrowserRouter([
   {
@@ -31,8 +33,24 @@ const browserRouter = createBrowserRouter([
         element: <ProductsPage />,
       },
       {
+        path: "products/:productId",
+        element: <UpdateProduct />,
+      },
+      {
+        path: "/products/create",
+        element: <CreateProduct />,
+      },
+      {
         path: "/categories",
         element: <CategoriesPage />,
+      },
+      {
+        path: "/categories/:categoryId",
+        element: <UpdateCategory />,
+      },
+      {
+        path: "/categories/create",
+        element: <CreateCategory />,
       },
       {
         path: "/brands",
@@ -46,10 +64,6 @@ const browserRouter = createBrowserRouter([
         path: "/orders",
         element: <OrdersPage />,
       },
-      {
-        path: "/reviews",
-        element: <ReviewsPage />,
-      },
     ],
   },
   {
@@ -58,14 +72,10 @@ const browserRouter = createBrowserRouter([
   },
 ]);
 
-const queryClient = new QueryClient();
-
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <ChakraProvider>
-      <QueryClientProvider client={queryClient}>
-        <RouterProvider router={browserRouter} />
-      </QueryClientProvider>
-    </ChakraProvider>
+    <Providers>
+      <RouterProvider router={browserRouter} />
+    </Providers>
   </StrictMode>,
 );

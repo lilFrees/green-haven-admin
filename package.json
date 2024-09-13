@@ -16,6 +16,7 @@
     "@hookform/resolvers": "^3.9.0",
     "@supabase/supabase-js": "^2.45.1",
     "axios": "^1.7.5",
+    "browser-image-compression": "^2.0.2",
     "framer-motion": "^11.3.28",
     "lodash": "^4.17.21",
     "pg": "^8.12.0",
@@ -33,6 +34,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
+    "@types/imagemin-webp": "^7.0.3",
     "@types/pg": "^8.11.7",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",

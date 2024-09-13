@@ -1,20 +1,20 @@
 import { IconButton, Td, Tooltip, Tr } from "@chakra-ui/react";
-import { IBrand } from "../interfaces/IBrand";
 import { FaTrashAlt } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
+import { IAdminBrand } from "../interfaces/IBrand";
 
-function BrandRow({ brand }: { brand: IBrand }) {
+function BrandRow({ brand }: { brand: IAdminBrand }) {
   return (
     <Tr>
-      <Td>{brand.id}</Td>
+      <Td>{brand.brand_id}</Td>
       <Td>
         <span tabIndex={0}>
-          <Tooltip hasArrow label={brand.name} aria-label="brand-name">
-            {brand.name}
+          <Tooltip hasArrow label={brand.brand_name} aria-label="brand-name">
+            {brand.brand_name}
           </Tooltip>
         </span>
       </Td>
-      <Td>{brand.productsCount}</Td>
+      <Td>{brand.total_products}</Td>
       <Td display="flex" gap="10px">
         <IconButton aria-label="edit-product" icon={<MdEdit />} size="sm" />
         <IconButton

@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Button,
   Input,
@@ -5,15 +7,11 @@ import {
   InputRightElement,
   Select,
 } from "@chakra-ui/react";
-import { FaSearch } from "react-icons/fa";
-import {
-  FaChevronLeft,
-  FaChevronRight,
-  FaRegCircleXmark,
-} from "react-icons/fa6";
+import { FaSearch, FaChevronRight, FaChevronLeft } from "react-icons/fa";
+import { FaRegCircleXmark } from "react-icons/fa6";
 import ReactPaginate from "react-paginate";
-import BrandsTable from "../components/BrandsTable";
 import useBrands from "../hooks/useBrands";
+import BrandsTable from "../components/BrandsTable";
 
 function BrandsPage() {
   const {
@@ -29,6 +27,7 @@ function BrandsPage() {
     setPage,
     setLimit,
   } = useBrands();
+
   return (
     <div className="flex min-h-full flex-col gap-5">
       <h2 className="text-3xl">Brands {count > 0 && `(${count})`}</h2>

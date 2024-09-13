@@ -1,19 +1,18 @@
-import ReactPaginate from "react-paginate";
-import CategoriesTable from "../components/CategoriesTable";
-import useCategories from "../hooks/useCategories";
+"use client";
+
 import {
-  FaChevronLeft,
-  FaChevronRight,
-  FaRegCircleXmark,
-} from "react-icons/fa6";
-import {
-  InputGroup,
-  Input,
-  InputRightElement,
   Button,
+  Input,
+  InputGroup,
+  InputRightElement,
   Select,
 } from "@chakra-ui/react";
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaChevronRight, FaChevronLeft } from "react-icons/fa";
+import { FaRegCircleXmark } from "react-icons/fa6";
+import ReactPaginate from "react-paginate";
+import useCategories from "../hooks/useCategories";
+import CategoriesTable from "../components/CategoriesTable";
+import { Link } from "react-router-dom";
 
 function CategoriesPage() {
   const {
@@ -49,7 +48,9 @@ function CategoriesPage() {
           </InputRightElement>
         </InputGroup>
 
-        <Button colorScheme="green">New</Button>
+        <Link to="/categories/create">
+          <Button colorScheme="green">New</Button>
+        </Link>
       </div>
 
       <CategoriesTable categories={categories!} isLoading={isLoading} />

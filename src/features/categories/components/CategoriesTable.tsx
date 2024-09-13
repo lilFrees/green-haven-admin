@@ -8,51 +8,54 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { ICategory } from "../interfaces/ICategory";
+import { IAdminCategory } from "../interfaces/ICategory";
 import CategoryRow from "./CategoryRow";
 
 function CategoriesTable({
   categories,
   isLoading,
 }: {
-  categories?: ICategory[] | undefined;
+  categories?: IAdminCategory[] | undefined;
   isLoading: boolean;
 }) {
   return (
     <TableContainer>
-      <Table>
+      <Table size="sm">
         <Thead>
           <Tr>
-            <Th>№</Th>
+            <Th>ID</Th>
             <Th>Name</Th>
             <Th>Products count</Th>
             <Th>Actions</Th>
           </Tr>
         </Thead>
-        <Tbody>
-          {isLoading &&
-            new Array(10).fill(0).map((_, index) => (
+        {isLoading && (
+          <Tbody>
+            {new Array(10).fill(0).map((_, index) => (
               <Tr key={index}>
-                <Td>
+                <Td py={2}>
                   <Skeleton className="h-[15px] w-full" />
                 </Td>
-                <Td>
+                <Td py={2}>
                   <Skeleton className="h-[15px] w-full" />
                 </Td>
-                <Td>
+                <Td py={2}>
                   <Skeleton className="h-[15px] w-full" />
                 </Td>
-                <Td>
+                <Td py={2}>
                   <Skeleton className="h-[15px] w-full" />
                 </Td>
               </Tr>
             ))}
-          {!isLoading &&
-            categories &&
-            categories.map((category, index) => (
+          </Tbody>
+        )}
+        {!isLoading && categories && (
+          <Tbody>
+            {categories.map((category, index) => (
               <CategoryRow key={index} category={category} />
             ))}
-        </Tbody>
+          </Tbody>
+        )}
       </Table>
     </TableContainer>
   );

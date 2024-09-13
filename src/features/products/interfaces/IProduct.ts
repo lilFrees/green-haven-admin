@@ -4,10 +4,9 @@ export interface IProduct {
   description: string;
   category: string;
   price: number;
-  discountPercentage: number;
+  discounted_price: number;
   rating: number;
   stock: number;
-  tags: string[];
   brand: string;
   sku: string;
   weight: number;
@@ -16,9 +15,10 @@ export interface IProduct {
     height: number;
     depth: number;
   };
-  warrantyInformation: string;
-  shippingInformation: string;
-  availabilityStatus: string;
+  warranty_information: string;
+  shipping_information: string;
+  return_policy: string;
+  availability_status: string;
   reviews: {
     rating: number;
     comment: string;
@@ -26,14 +26,6 @@ export interface IProduct {
     reviewerName: string;
     reviewerEmail: string;
   }[];
-  returnPolicy: string;
-  minimumOrderQuantity: number;
-  meta: {
-    createdAt: string;
-    updatedAt: string;
-    barcode: string;
-    qrCode: string;
-  };
   images: string[];
   thumbnail: string;
   is_active: boolean;

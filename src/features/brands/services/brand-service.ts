@@ -1,5 +1,7 @@
-import { supabase } from "../../auth/services/supabase";
-import { IBrand, IBrandWithCount } from "../interfaces/IBrand";
+"use server";
+
+import { supabase } from "../../../shared/supabase/client";
+import { IBrandWithCount } from "../interfaces/IBrand";
 
 export async function getBrands({
   page,
@@ -11,48 +13,30 @@ export async function getBrands({
   searchQuery?: string;
 }): Promise<IBrandWithCount> {
   let query = supabase
-    .from("brands")
-    .select("id, name")
-    .order("id", { ascending: true });
+    .from("admin_brands")
+    .select("*")
+    .order("brand_id", { ascending: true });
 
   if (searchQuery) {
-    query = query.or(`name.ilike.%${searchQuery}%`);
+    query = query.ilike("brand_name", `%${searchQuery}%`);
   }
 
-  const { data: allCategories, error: countError } = await query;
+  const { data: allBrands, error: errorCategories } = await query;
 
-  if (countError) {
-    throw new Error(countError.message);
+  if (errorCategories) {
+    throw errorCategories.message;
   }
 
-  const count = allCategories.length;
+  const count = allBrands.length;
 
   const { data, error } = await query.range(
     page * limit,
     (page + 1) * limit - 1,
   );
 
-  const dataWithCount: IBrand[] = await Promise.all(
-    data!.map(async (brand) => {
-      const { data: prodCount, error: prodCountError } = await supabase
-        .from("brand_products")
-        .select("product_id, brand_id")
-        .eq("brand_id", brand.id);
-
-      if (prodCountError) {
-        throw new Error(prodCountError.message);
-      }
-
-      return {
-        ...brand,
-        productsCount: prodCount.length,
-      };
-    }),
-  );
-
   if (error) {
     throw new Error(error.message);
   }
 
-  return { brands: dataWithCount, count };
+  return { brands: data, count };
 }

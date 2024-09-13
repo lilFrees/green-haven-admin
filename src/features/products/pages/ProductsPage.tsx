@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Button,
   Input,
@@ -5,13 +7,14 @@ import {
   InputRightElement,
   Select,
 } from "@chakra-ui/react";
-import { FaChevronLeft, FaChevronRight, FaSearch } from "react-icons/fa";
+import { FaSearch, FaChevronRight, FaChevronLeft } from "react-icons/fa";
 import { FaRegCircleXmark } from "react-icons/fa6";
 import ReactPaginate from "react-paginate";
-import ProductsTable from "../components/ProductsTable";
 import useProducts from "../hooks/useProducts";
+import { Link } from "react-router-dom";
+import ProductsTable from "../components/ProductsTable";
 
-function ProductsPage() {
+function ProductPage() {
   const {
     searchQuery,
     setSearchQuery,
@@ -45,12 +48,10 @@ function ProductsPage() {
             )}
           </InputRightElement>
         </InputGroup>
-        <div className="flex gap-5">
-          <Button colorScheme="green" variant="outline">
-            Bulk import
-          </Button>
+
+        <Link to="/products/create">
           <Button colorScheme="green">New</Button>
-        </div>
+        </Link>
       </div>
       <ProductsTable products={products!} isLoading={isLoading} />
       <div className="mt-auto flex items-center justify-end gap-5">
@@ -94,4 +95,4 @@ function ProductsPage() {
   );
 }
 
-export default ProductsPage;
+export default ProductPage;

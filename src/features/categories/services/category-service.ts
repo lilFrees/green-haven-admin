@@ -1,5 +1,9 @@
-import { supabase } from "../../auth/services/supabase";
-import { ICategory, ICategoryWithCount } from "../interfaces/ICategory";
+import { supabase } from "../../../shared/supabase/client";
+import {
+  IAdminCategory,
+  ICategory,
+  ICategoryWithCount,
+} from "../interfaces/ICategory";
 
 export async function getCategories({
   page,
@@ -8,23 +12,21 @@ export async function getCategories({
 }: {
   page: number;
   limit: number;
-  searchQuery?: string;
+  searchQuery: string;
 }): Promise<ICategoryWithCount> {
   let query = supabase
-    .from("categories")
-    .select("id, name, description, slug")
-    .order("id", { ascending: true });
+    .from("admin_categories")
+    .select("*")
+    .order("category_id", { ascending: true });
 
   if (searchQuery) {
-    query = query.or(
-      `name.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%,slug.ilike.%${searchQuery}%`,
-    );
+    query = query.ilike("category_name", `%${searchQuery}%`);
   }
 
-  const { data: allCategories, error: countError } = await query;
+  const { data: allCategories, error: errorCategories } = await query;
 
-  if (countError) {
-    throw new Error(countError.message);
+  if (errorCategories) {
+    throw errorCategories.message;
   }
 
   const count = allCategories.length;
@@ -34,27 +36,49 @@ export async function getCategories({
     (page + 1) * limit - 1,
   );
 
-  const dataWithCount: ICategory[] = await Promise.all(
-    data!.map(async (category) => {
-      const { data: prodCount, error: prodCountError } = await supabase
-        .from("category_products")
-        .select("product_id, category_id")
-        .eq("category_id", category.id);
+  if (error) {
+    throw new Error(error.message);
+  }
 
-      if (prodCountError) {
-        throw new Error(prodCountError.message);
-      }
+  return { categories: data, count };
+}
 
-      return {
-        ...category,
-        productsCount: prodCount.length,
-      };
-    }),
-  );
+export async function getCategoryById(id: number): Promise<ICategory | null> {
+  const { data, error } = await supabase
+    .from("categories")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    console.error(error.message);
+    return null;
+  }
+
+  return data;
+}
+
+export async function createCategory({
+  image,
+  name,
+  slug,
+  description,
+}: ICategory) {
+  const { data, error } = await supabase
+    .from("categories")
+    .insert([
+      {
+        name,
+        slug,
+        description,
+        image,
+      },
+    ])
+    .single();
 
   if (error) {
     throw new Error(error.message);
   }
 
-  return { categories: dataWithCount, count };
+  return data;
 }

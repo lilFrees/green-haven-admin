@@ -72,7 +72,7 @@ function App() {
                 variant="ghost"
                 colorScheme="green"
                 className="w-full justify-start"
-                isActive={pathname === link.to}
+                isActive={pathname.startsWith(link.to)}
               >
                 <span className="w-full text-left">{link.title}</span>
               </Button>

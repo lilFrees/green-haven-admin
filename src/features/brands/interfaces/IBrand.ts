@@ -1,10 +1,16 @@
-export interface IBrand {
-  id: number;
-  name: string;
-  productsCount: number;
+export interface IAdminBrand {
+  brand_id: number;
+  brand_name: string;
+  total_products: number;
 }
 
 export interface IBrandWithCount {
-  brands: IBrand[];
+  brands: IAdminBrand[];
   count: number;
+}
+
+export interface IBrand {
+  id: number;
+  name: string;
+  created_at: Date;
 }
