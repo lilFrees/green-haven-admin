@@ -1,5 +1,5 @@
 export interface IUser {
-  user_id: number;
+  user_id: string;
   created_at: Date;
   user_email: string;
   user_name: string;
@@ -9,4 +9,9 @@ export interface IUser {
   last_order_date: Date | null;
   updated_at: Date;
   role: string;
+}
+
+export interface IUserWithCount {
+  users: IUser[];
+  count: number;
 }

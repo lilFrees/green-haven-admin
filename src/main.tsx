@@ -18,6 +18,7 @@ import Layout from "./shared/components/Layout.tsx";
 import Providers from "./shared/components/Providers.tsx";
 import UpdateBrandPage from "./features/brands/pages/UpdateBrandPage.tsx";
 import CreateBrandPage from "./features/brands/pages/CreateBrandPage.tsx";
+import OrderDetails from "./features/orders/pages/OrderDetails.tsx";
 
 const browserRouter = createBrowserRouter([
   {
@@ -73,6 +74,10 @@ const browserRouter = createBrowserRouter([
       {
         path: "/orders",
         element: <OrdersPage />,
+      },
+      {
+        path: "/orders/:orderId",
+        element: <OrderDetails />,
       },
     ],
   },

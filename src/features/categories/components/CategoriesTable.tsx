@@ -20,9 +20,9 @@ function CategoriesTable({
 }) {
   return (
     <TableContainer>
-      <Table size="sm">
-        <Thead>
-          <Tr>
+      <Table size="sm" variant="striped">
+        <Thead className="bg-slate-50">
+          <Tr className="divide-x divide-slate-400/20">
             <Th>ID</Th>
             <Th>Name</Th>
             <Th>Products count</Th>

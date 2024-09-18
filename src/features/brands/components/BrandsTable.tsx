@@ -33,9 +33,9 @@ function BrandsTable({
 
   return (
     <TableContainer>
-      <Table size="sm">
-        <Thead>
-          <Tr>
+      <Table size="sm" variant="striped">
+        <Thead className="bg-slate-50">
+          <Tr className="divide-x divide-slate-400/20">
             <Th onClick={() => handleSortBy("id")}>№</Th>
             <Th onClick={() => handleSortBy("name")}>Name</Th>
             <Th onClick={() => handleSortBy("count")}>Products count</Th>

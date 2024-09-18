@@ -1,18 +1,17 @@
 "use client";
 
-import { useQuery } from "react-query";
-import { getUsers } from "../services/user-service";
 import {
   Skeleton,
   Table,
   TableContainer,
   Tbody,
   Td,
+  Th,
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import UserRow from "./UserRow";
 import { IUser } from "../interface/IUser";
+import UserRow from "./UserRow";
 
 function UsersTable({
   users,
@@ -23,17 +22,17 @@ function UsersTable({
 }) {
   return (
     <TableContainer>
-      <Table size="sm">
-        <Thead>
-          <Tr>
-            <Td>Email</Td>
-            <Td>Name</Td>
-            <Td>Role</Td>
-            <Td>Total Orders</Td>
-            <Td>Total Spent</Td>
-            <Td>Last Order Date</Td>
-            <Td>Joined At</Td>
-            <Td>More</Td>
+      <Table size="sm" variant="striped">
+        <Thead className="bg-slate-50">
+          <Tr className="divide-x divide-slate-400/20">
+            <Th>Email</Th>
+            <Th>Name</Th>
+            <Th>Role</Th>
+            <Th>Total Orders</Th>
+            <Th>Total Spent</Th>
+            <Th>Last Order Date</Th>
+            <Th>Joined At</Th>
+            <Th>Actions</Th>
           </Tr>
         </Thead>
         {isLoading && (
