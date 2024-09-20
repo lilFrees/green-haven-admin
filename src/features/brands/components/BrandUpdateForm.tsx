@@ -88,7 +88,15 @@ function BrandUpdateForm({
       throw new Error(udpateError?.message);
     }
 
-    if (!image) throw new Error("Please upload an image");
+    if (!image) {
+      toast({
+        title: "Please upload an image",
+        status: "error",
+        isClosable: true,
+        duration: 5000,
+      });
+      throw new Error("Please upload an image");
+    }
 
     const compressedImage = await convertToWebp(image.file);
 

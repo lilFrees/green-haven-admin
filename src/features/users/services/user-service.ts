@@ -1,21 +1,26 @@
 "use server";
 
 import { supabase } from "../../../shared/supabase/client";
-import { IUserWithCount } from "../interface/IUser";
+import { IUser, IUserWithCount } from "../interface/IUser";
 
 export async function getUsers({
   page,
   limit,
   searchQuery,
+  sortBy,
+  ascending,
 }: {
-  page: number;
-  limit: number;
-  searchQuery: string;
+  page?: number;
+  limit?: number;
+  searchQuery?: string;
+  sortBy?: keyof IUser | undefined;
+  ascending?: boolean;
 }): Promise<IUserWithCount | null> {
-  let query = supabase
-    .from("admin_users")
-    .select("*")
-    .order("user_name", { ascending: true });
+  let query = supabase.from("admin_users").select("*");
+
+  if (sortBy) {
+    query = query.order(sortBy, { ascending });
+  }
 
   if (searchQuery) {
     query = query.ilike("user_name", `%${searchQuery}%`);
@@ -28,6 +33,17 @@ export async function getUsers({
   }
 
   const count = allOrders.length;
+
+  if (page === undefined || limit === undefined) {
+    const { data, error } = await query;
+
+    if (error) {
+      console.error(error.message);
+      return null;
+    }
+
+    return { users: data, count };
+  }
 
   const { data, error } = await query.range(
     page * limit,

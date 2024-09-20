@@ -11,9 +11,9 @@ export async function getOrders({
   limit,
   searchQuery,
 }: {
-  page: number;
-  limit: number;
-  searchQuery: string;
+  page?: number;
+  limit?: number;
+  searchQuery?: string;
 }): Promise<IAdminOrderWithCount | null> {
   let query = supabase
     .from("admin_orders")
@@ -32,6 +32,9 @@ export async function getOrders({
 
   const count = allOrders.length;
 
+  if (page === undefined || limit === undefined) {
+    return { orders: allOrders, count };
+  }
   const { data, error } = await query.range(
     page * limit,
     (page + 1) * limit - 1,

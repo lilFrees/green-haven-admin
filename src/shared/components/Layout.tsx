@@ -1,83 +1,150 @@
 import { Button } from "@chakra-ui/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { BsGrid1X2Fill } from "react-icons/bs";
-import { FaFileAlt } from "react-icons/fa";
-import { FaCube, FaShapes, FaUserGroup } from "react-icons/fa6";
+import {
+  FaCube,
+  FaMoneyBillWave,
+  FaShapes,
+  FaUserGroup,
+} from "react-icons/fa6";
 import { IoMdExit } from "react-icons/io";
 import { MdStars } from "react-icons/md";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
+import logo from "../../assets/logo.png";
 import { useAuthStore } from "../../features/auth/hooks/useAuthStore";
-
+import { supabase } from "../supabase/client";
+import { motion } from "framer-motion";
 const links = [
   {
     to: "/dashboard",
     title: "Dashboard",
-    icon: <BsGrid1X2Fill />,
+    icon: BsGrid1X2Fill,
   },
   {
     to: "/products",
     title: "Products",
-    icon: <FaCube />,
+    icon: FaCube,
   },
   {
     to: "/categories",
     title: "Categories",
-    icon: <FaShapes />,
+    icon: FaShapes,
   },
   {
     to: "/brands",
     title: "Brands",
-    icon: <MdStars />,
+    icon: MdStars,
   },
   {
     to: "/users",
     title: "Users",
-    icon: <FaUserGroup />,
+    icon: FaUserGroup,
   },
   {
     to: "/orders",
     title: "Orders",
-    icon: <FaFileAlt />,
+    icon: FaMoneyBillWave,
   },
 ];
 
 function App() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const currentSession = useAuthStore((state) => state.session);
-  const logout = useAuthStore((state) => state.logout);
+  const { logout, session } = useAuthStore();
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
+
   useEffect(() => {
-    if (!currentSession) {
+    async function checkSession() {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        logout();
+        navigate("/login");
+      }
+    }
+
+    if (!session) {
       navigate("/login");
     } else if (pathname === "/") {
       navigate("/dashboard");
     }
-  }, [currentSession, navigate, pathname]);
+
+    checkSession();
+  }, [session, navigate, pathname, logout]);
 
   return (
-    <div className="flex h-screen overflow-y-hidden">
-      <div className="flex h-full basis-72 flex-col gap-5 border-r border-slate-300 p-3">
-        <h2 className="text-xl font-bold">Green Haven Admin</h2>
-        <nav className="flex w-full grow flex-col gap-3">
+    <div className="relative flex h-screen overflow-y-hidden">
+      <motion.div
+        initial={{
+          width: "4rem",
+        }}
+        animate={{
+          width: isExpanded ? "16rem" : "4.5rem",
+        }}
+        transition={{ type: "spring", stiffness: 200, damping: 30 }}
+        className="absolute z-10 flex h-full flex-col gap-5 border-r border-slate-300 bg-white/20 p-3 backdrop-blur-sm"
+        onMouseEnter={() => setIsExpanded(true)}
+        onMouseLeave={() => setIsExpanded(false)}
+      >
+        <div className="h-12 w-12 rounded-lg p-1">
+          <img
+            src={logo}
+            alt="Logo"
+            className="h-full w-full object-contain text-left"
+          />
+        </div>
+        <nav className="flex grow flex-col gap-3">
           {links.map((link) => (
             <Link key={link.to} to={link.to}>
               <Button
-                leftIcon={link.icon}
                 variant="ghost"
                 colorScheme="green"
-                className="w-full justify-start"
+                className="flex w-full items-center"
                 isActive={pathname.startsWith(link.to)}
               >
-                <span className="w-full text-left">{link.title}</span>
+                <link.icon fontSize={16} className="shrink-0" />
+                <motion.span
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{
+                    opacity: isExpanded ? 1 : 0,
+                    x: isExpanded ? 10 : -20,
+                  }}
+                  transition={{ duration: 0.3, delay: isExpanded ? 0.1 : 0 }}
+                  style={{
+                    width: isExpanded ? "max-content" : "0",
+                    overflow: "hidden",
+                  }}
+                  className="w-0 grow whitespace-nowrap text-left"
+                >
+                  {link.title}
+                </motion.span>
               </Button>
             </Link>
           ))}
         </nav>
-        <Button colorScheme="green" onClick={logout} rightIcon={<IoMdExit />}>
-          {currentSession?.user.user_metadata.full_name}
+
+        <Button
+          colorScheme="green"
+          iconSpacing={0}
+          onClick={logout}
+          rightIcon={<IoMdExit />}
+          className="absolute bottom-5 w-full"
+        >
+          <motion.span
+            initial={{ opacity: 0, x: -20 }}
+            animate={{
+              opacity: isExpanded ? 1 : 0,
+              x: isExpanded ? 0 : -20,
+            }}
+            transition={{ duration: 0.3 }}
+          >
+            {session?.user.user_metadata.full_name}
+          </motion.span>
         </Button>
-      </div>
-      <div className="h-full w-full overflow-auto p-10">
+      </motion.div>
+      <div className="ml-16 h-full w-full overflow-auto p-10">
         <Outlet />
       </div>
     </div>

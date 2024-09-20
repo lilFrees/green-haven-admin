@@ -54,7 +54,7 @@ function UpdateCategoryForm({
     );
 
   async function onSubmit(data: CategoryData) {
-    const { data: updateData, error: updateError } = await supabase
+    const { error: updateError } = await supabase
       .from("categories")
       .update({
         name: data.name,
@@ -62,76 +62,74 @@ function UpdateCategoryForm({
         slug: data.slug,
       })
       .eq("id", category?.id)
-      .select("id")
       .single();
     if (updateError) {
       console.error(updateError.message);
       toast({
         title: "Failed to update category",
+        description: updateError.message,
         status: "error",
         duration: 5000,
         isClosable: true,
         position: "top",
       });
+      return;
     }
 
-    if (!image) {
-      throw new Error("Please upload an image");
+    if (image) {
+      const compressedImage = await convertToWebp(image.file, 100);
+
+      const { error: storageError } = await supabase.storage
+        .from("category_images")
+        .upload(`category-${data.slug}/image.webp`, compressedImage, {
+          upsert: true,
+          cacheControl: "0",
+        });
+
+      if (storageError) {
+        console.error(storageError.message);
+        toast({
+          title: "Failed to upload category image",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "top",
+        });
+      }
+
+      const {
+        data: { publicUrl },
+      } = supabase.storage
+        .from("category_images")
+        .getPublicUrl(`category-${data.slug}/image.webp`);
+
+      const { error: imageError } = await supabase
+        .from("categories")
+        .update({
+          image: publicUrl,
+        })
+        .eq("id", category?.id)
+        .single();
+
+      if (imageError) {
+        console.error(imageError.message);
+        toast({
+          title: "Failed to update category image",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "top",
+        });
+      }
     }
-
-    const compressedImage = await convertToWebp(image.file, 100);
-
-    const { error: storageError } = await supabase.storage
-      .from("category_images")
-      .upload(`category-${data.slug}/image.webp`, compressedImage, {
-        upsert: true,
-        cacheControl: "0",
-      });
-
-    if (storageError) {
-      console.error(storageError.message);
-      toast({
-        title: "Failed to upload category image",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-        position: "top",
-      });
-    }
-
-    const {
-      data: { publicUrl },
-    } = supabase.storage
-      .from("category_images")
-      .getPublicUrl(`category-${data.slug}/image.webp`);
-
-    const { error: imageError } = await supabase
-      .from("categories")
-      .update({
-        image: publicUrl,
-      })
-      .eq("id", updateData?.id)
-      .single();
-
-    if (imageError) {
-      console.error(imageError.message);
-      toast({
-        title: "Failed to update category image",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-        position: "top",
-      });
-    } else {
-      toast({
-        title: "Category updated successfully",
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-        position: "top",
-      });
-      navigate("/categories");
-    }
+    toast({
+      title: "Category updated successfully",
+      status: "success",
+      duration: 5000,
+      isClosable: true,
+      position: "top",
+    });
+    navigate("/categories");
   }
 
   function generateHandler() {

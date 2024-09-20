@@ -1,4 +1,4 @@
-import { IconButton } from "@chakra-ui/react";
+import { IconButton, Skeleton } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import { MdEdit } from "react-icons/md";
 import { FaPlus, FaTrash } from "react-icons/fa6";
@@ -8,6 +8,7 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 const BrandImagePicker = ({ initialImage }: { initialImage?: string }) => {
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const { image, removeImage, setImage } = useBrandImage();
 
@@ -20,6 +21,7 @@ const BrandImagePicker = ({ initialImage }: { initialImage?: string }) => {
         }
         const blob = await response.blob();
         const file = new File([blob], "initial-image", { type: blob.type });
+        setIsLoading(false);
         setImage({ file, url });
       } catch (error) {
         console.error("Error fetching initial image:", error);
@@ -65,7 +67,8 @@ const BrandImagePicker = ({ initialImage }: { initialImage?: string }) => {
 
   return (
     <div className="flex w-full items-center justify-center rounded-3xl border-4 border-dashed border-slate-300 p-5">
-      {image ? (
+      {isLoading && <Skeleton className="h-72 w-72" />}
+      {image && (
         <div className="group relative h-72 w-72">
           <LazyLoadImage
             src={image.url}
@@ -89,17 +92,16 @@ const BrandImagePicker = ({ initialImage }: { initialImage?: string }) => {
             />
           </div>
         </div>
-      ) : (
-        <div className="h-32 w-32">
-          <IconButton
-            aria-label="Upload an image"
-            onClick={handleUploadClick}
-            size="lg"
-            icon={<FaPlus className="text-3xl text-slate-500" />}
-            className="!h-full !w-full"
-          />
-        </div>
       )}
+      {!isLoading && !image && (
+        <IconButton
+          aria-label="Upload image"
+          icon={<FaPlus className="text-4xl" />}
+          size="sm"
+          onClick={handleUploadClick}
+        />
+      )}
+
       <input
         type="file"
         ref={fileInputRef}

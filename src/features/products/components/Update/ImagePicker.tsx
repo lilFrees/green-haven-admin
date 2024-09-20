@@ -1,4 +1,4 @@
-import { IconButton } from "@chakra-ui/react";
+import { IconButton, Skeleton } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { FaPlus, FaTrash } from "react-icons/fa";
@@ -10,6 +10,7 @@ function ImagePicker({ initialImages }: { initialImages: string[] }) {
   const { images, setImages, addImage, removeImage, updateImage } =
     useUpdateImageStore();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     async function fetchImages() {
@@ -30,6 +31,7 @@ function ImagePicker({ initialImages }: { initialImages: string[] }) {
         }),
       );
 
+      setIsLoading(false);
       setImages(initialImageItems);
     }
 
@@ -72,6 +74,14 @@ function ImagePicker({ initialImages }: { initialImages: string[] }) {
 
   return (
     <div className="flex w-full gap-5 overflow-x-auto border border-dashed border-slate-300 p-5">
+      {isLoading && (
+        <>
+          {new Array(3).fill(0).map((_, index) => (
+            <Skeleton key={index} className="h-32 w-32 shrink-0" />
+          ))}
+        </>
+      )}
+
       {images.map((image, index) => (
         <div
           key={index}

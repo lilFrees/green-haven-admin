@@ -1,8 +1,7 @@
 import { supabase } from "../../../shared/supabase/client";
 import {
-  IAdminCategory,
   ICategory,
-  ICategoryWithCount,
+  ICategoryWithCount
 } from "../interfaces/ICategory";
 
 export async function getCategories({

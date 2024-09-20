@@ -157,7 +157,6 @@ function UpdateForm({ product }: { product: IProduct }) {
       }),
     );
 
-
     const { error } = await supabase
       .from("products")
       .update({

@@ -7,18 +7,25 @@ export async function getProducts({
   page,
   limit,
   searchQuery,
+  sortBy,
+  ascending,
 }: {
-  page: number;
-  limit: number;
-  searchQuery?: string;
+  page?: number | undefined;
+  limit?: number | undefined;
+  searchQuery?: string | undefined;
+  sortBy?: keyof IAdminProduct | undefined;
+  ascending?: boolean | undefined;
 }): Promise<{
-  products: IAdminProduct[];
-  count: number;
+  products: IAdminProduct[] | undefined;
+  count: number | undefined;
 }> {
-  let query = supabase
-    .from("admin_products")
-    .select("*")
-    .order("product_id", { ascending: true });
+  let query = supabase.from("admin_products").select("*");
+
+  if (sortBy) {
+    query = query.order(sortBy, { ascending: ascending ?? true });
+  } else {
+    query = query.order("product_id", { ascending: true });
+  }
 
   if (searchQuery) {
     query = query.or(
@@ -30,6 +37,10 @@ export async function getProducts({
 
   if (countError) {
     throw new Error(countError.message);
+  }
+
+  if (page === undefined || limit === undefined) {
+    return { products: allProducts, count: allProducts.length };
   }
 
   const { data, error } = await query.range(

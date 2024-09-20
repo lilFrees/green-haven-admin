@@ -15,6 +15,7 @@ import { useCategoryImage } from "../hooks/useCategoryImage";
 import { supabase } from "../../../shared/supabase/client";
 import { convertToWebp } from "../../../shared/utils/convertToWebp";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const schema = z.object({
   name: z.string().min(5),
@@ -26,6 +27,7 @@ type FormData = z.infer<typeof schema>;
 
 function CreateCategoryForm() {
   const { image, removeImage } = useCategoryImage();
+  const navigate = useNavigate();
   const toast = useToast();
   const {
     register,
@@ -65,63 +67,61 @@ function CreateCategoryForm() {
 
     const { id: newId } = insertData;
 
-    if (!image) {
-      throw new Error("Please upload an image");
+    if (image) {
+      const compressedImage = await convertToWebp(image.file, 100);
+
+      const { error: storageError } = await supabase.storage
+        .from("category_images")
+        .upload(`category-${data.slug}/image.webp`, compressedImage, {
+          upsert: true,
+          cacheControl: "0",
+        });
+
+      if (storageError) {
+        console.error(storageError.message);
+        toast({
+          title: "Failed to upload category image",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "top",
+        });
+      }
+
+      const {
+        data: { publicUrl },
+      } = supabase.storage
+        .from("category_images")
+        .getPublicUrl(`category-${data.slug}/image.webp`);
+      const { error: updateError } = await supabase
+        .from("categories")
+        .update({
+          image: publicUrl,
+        })
+        .eq("id", newId)
+        .single();
+
+      if (updateError) {
+        console.error(updateError.message);
+        toast({
+          title: "Failed to update category image",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "top",
+        });
+      }
     }
 
-    const compressedImage = await convertToWebp(image.file, 100);
+    toast({
+      title: "Category created successfully",
+      status: "success",
+      duration: 5000,
+      isClosable: true,
+      position: "top",
+    });
 
-    const { error: storageError } = await supabase.storage
-      .from("category_images")
-      .upload(`category-${data.slug}/image.webp`, compressedImage, {
-        upsert: true,
-        cacheControl: "0",
-      });
-
-    if (storageError) {
-      console.error(storageError.message);
-      toast({
-        title: "Failed to upload category image",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-        position: "top",
-      });
-    }
-
-    const {
-      data: { publicUrl },
-    } = supabase.storage
-      .from("category_images")
-      .getPublicUrl(`category-${data.slug}/image.webp`);
-    console.log(publicUrl);
-
-    const { error: updateError } = await supabase
-      .from("categories")
-      .update({
-        image: publicUrl,
-      })
-      .eq("id", newId)
-      .single();
-
-    if (updateError) {
-      console.error(updateError.message);
-      toast({
-        title: "Failed to update category image",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-        position: "top",
-      });
-    } else {
-      toast({
-        title: "Category created successfully",
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-        position: "top",
-      });
-    }
+    navigate("/categories");
   }
 
   function generateHandler() {

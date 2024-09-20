@@ -13,7 +13,7 @@ function UsersPage() {
 
   return (
     <div className="flex min-h-full flex-col gap-5">
-      <h1 className="text-3xl">Users</h1>
+      <h1 className="text-3xl">Users {users && `(${users.length})`}</h1>
       <Suspense fallback={<Spinner />}>
         <UsersTable users={users} isLoading={isLoading} />
       </Suspense>

@@ -6,7 +6,7 @@ import { supabase } from "../../../shared/supabase/client";
 interface AuthState {
   user: User | null;
   session: Session | null;
-  setSession: (session: Session) => void;
+  setSession: (session: Session | null) => void;
   setUser: (user: User) => void;
   logout: () => Promise<void>;
 }
