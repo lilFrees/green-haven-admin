@@ -1,5 +1,3 @@
-"use server";
-
 import { supabase } from "../../../shared/supabase/client";
 import { IUser, IUserWithCount } from "../interface/IUser";
 

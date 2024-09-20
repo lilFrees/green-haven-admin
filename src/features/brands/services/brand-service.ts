@@ -1,5 +1,3 @@
-"use server";
-
 import { supabase } from "../../../shared/supabase/client";
 import { IBrand, IBrandWithCount } from "../interfaces/IBrand";
 

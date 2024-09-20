@@ -13,9 +13,11 @@ const useProducts = () => {
     queryKey: ["products", { page, limit, searchQuery }],
     queryFn: async () => {
       const data = await getProducts({ page, limit, searchQuery });
-      setCount(data.count);
-      setMaxPages(Math.ceil(data.count / limit));
-      return data;
+      if (data) {
+        setCount(data.count!);
+        setMaxPages(Math.ceil(data.count! / limit));
+        return data;
+      }
     },
   });
   const products = data?.products;
