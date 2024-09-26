@@ -21,11 +21,12 @@ const BrandImagePicker = ({ initialImage }: { initialImage?: string }) => {
         }
         const blob = await response.blob();
         const file = new File([blob], "initial-image", { type: blob.type });
-        setIsLoading(false);
         setImage({ file, url });
       } catch (error) {
         console.error("Error fetching initial image:", error);
         setError("Failed to load initial image");
+      } finally {
+        setIsLoading(false);
       }
     };
     if (initialImage) {

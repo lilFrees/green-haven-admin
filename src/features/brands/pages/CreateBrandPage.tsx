@@ -8,8 +8,8 @@ function CreateBrandPage() {
   return (
     <div className="flex flex-col gap-5">
       <div className="flex items-center gap-10">
-        <Link to="/categories">
-          <IconButton aria-label="Edit" icon={<FaChevronLeft />} />
+        <Link to="/brands">
+          <IconButton aria-label="Go Back to brands" icon={<FaChevronLeft />} />
         </Link>
         <h1 className="text-2xl font-bold">Create a new brand</h1>
       </div>

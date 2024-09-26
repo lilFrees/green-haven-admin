@@ -62,13 +62,9 @@ function App() {
       if (!user) {
         logout();
         navigate("/login");
+      } else if (pathname === "/") {
+        navigate("/dashboard");
       }
-    }
-
-    if (!session) {
-      navigate("/login");
-    } else if (pathname === "/") {
-      navigate("/dashboard");
     }
 
     checkSession();
