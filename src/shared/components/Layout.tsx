@@ -60,7 +60,10 @@ function App() {
       } = await supabase.auth.getUser();
 
       if (!user) {
+        logout();
         navigate("/login");
+      } else if (pathname === "/") {
+        navigate("/dashboard");
       }
     }
 
@@ -138,7 +141,7 @@ function App() {
         </Button>
       </motion.div>
       <div className="ml-16 h-full w-full overflow-auto p-10">
-        <Outlet />
+        {pathname !== "/" && <Outlet />}
       </div>
     </div>
   );
