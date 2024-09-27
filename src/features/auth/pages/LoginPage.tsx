@@ -15,15 +15,23 @@ import { login } from "../services/auth";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../hooks/useAuthStore";
 import { useEffect } from "react";
+import { supabase } from "../../../shared/supabase/client";
 
 function LoginPage() {
-  const currentSession = useAuthStore((state) => state.session);
   const navigate = useNavigate();
   useEffect(() => {
-    if (currentSession) {
-      navigate("/dashboard");
+    async function checkSession() {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user) {
+        navigate("/dashboard");
+      }
     }
-  }, [currentSession]);
+
+    checkSession();
+  }, [navigate]);
 
   const setSession = useAuthStore((state) => state.setSession);
   const schema = z.object({
