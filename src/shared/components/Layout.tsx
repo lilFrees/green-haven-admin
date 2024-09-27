@@ -60,10 +60,7 @@ function App() {
       } = await supabase.auth.getUser();
 
       if (!user) {
-        logout();
         navigate("/login");
-      } else if (pathname === "/") {
-        navigate("/dashboard");
       }
     }
 
