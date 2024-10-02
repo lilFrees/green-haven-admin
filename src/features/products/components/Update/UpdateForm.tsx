@@ -136,7 +136,7 @@ function UpdateForm({ product }: { product: IProduct }) {
 
     const convertedImg = await Promise.all(
       images.map(async (image, i) => {
-        const compressedImage = await convertToWebp(image.file, 100);
+        const compressedImage = await convertToWebp(image.file);
 
         const { error } = await supabase.storage
           .from("product_images")

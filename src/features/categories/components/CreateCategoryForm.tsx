@@ -1,6 +1,3 @@
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import {
   Button,
   FormControl,
@@ -10,12 +7,15 @@ import {
   Textarea,
   useToast,
 } from "@chakra-ui/react";
-import { generateSlug } from "../../../shared/utils/generateSlug";
-import { useCategoryImage } from "../hooks/useCategoryImage";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { z } from "zod";
 import { supabase } from "../../../shared/supabase/client";
 import { convertToWebp } from "../../../shared/utils/convertToWebp";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { generateSlug } from "../../../shared/utils/generateSlug";
+import { useCategoryImage } from "../hooks/useCategoryImage";
 
 const schema = z.object({
   name: z.string().min(5),
@@ -68,7 +68,7 @@ function CreateCategoryForm() {
     const { id: newId } = insertData;
 
     if (image) {
-      const compressedImage = await convertToWebp(image.file, 100);
+      const compressedImage = await convertToWebp(image.file);
 
       const { error: storageError } = await supabase.storage
         .from("category_images")

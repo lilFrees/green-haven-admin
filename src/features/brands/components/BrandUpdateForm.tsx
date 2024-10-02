@@ -1,7 +1,3 @@
-import { z } from "zod";
-import { IBrand } from "../interfaces/IBrand";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Button,
   FormControl,
@@ -11,13 +7,16 @@ import {
   Spinner,
   useToast,
 } from "@chakra-ui/react";
-import { generateSlug } from "../../../shared/utils/generateSlug";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { z } from "zod";
 import { supabase } from "../../../shared/supabase/client";
 import { convertToWebp } from "../../../shared/utils/convertToWebp";
+import { generateSlug } from "../../../shared/utils/generateSlug";
 import { useBrandImage } from "../hooks/useBrandImage";
-import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-import { remove } from "lodash";
+import { IBrand } from "../interfaces/IBrand";
 
 const schema = z.object({
   name: z.string().min(1),

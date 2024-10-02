@@ -31,6 +31,8 @@ const BrandImagePicker = ({ initialImage }: { initialImage?: string }) => {
     };
     if (initialImage) {
       fetchImage(initialImage);
+    } else {
+      setIsLoading(false);
     }
   }, [initialImage, setImage]);
 
@@ -95,12 +97,15 @@ const BrandImagePicker = ({ initialImage }: { initialImage?: string }) => {
         </div>
       )}
       {!isLoading && !image && (
-        <IconButton
-          aria-label="Upload image"
-          icon={<FaPlus className="text-4xl" />}
-          size="sm"
-          onClick={handleUploadClick}
-        />
+        <div className="h-72 w-72">
+          <IconButton
+            aria-label="Upload image"
+            icon={<FaPlus className="text-4xl text-slate-500" />}
+            size="sm"
+            onClick={handleUploadClick}
+            className="!h-full !w-full"
+          />
+        </div>
       )}
 
       <input

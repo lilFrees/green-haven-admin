@@ -10,14 +10,17 @@ import { useUsersTimeFilter } from "../hooks/useUsersTimeFilter";
 import RecentProducts from "../components/RecentProducts";
 import BrandSales from "../components/BrandSales";
 import CategorySales from "../components/CategorySales";
+import { FaCaretUp } from "react-icons/fa6";
+import { DateFilter } from "../../../shared/utils/createTimeFilter";
 
 function DashboardPage() {
-  const { orders, users } = useDashboard();
+  const { orders, users, recentOrders } = useDashboard();
   const { dateFilter: salesFilter, setDateFilter: setSalesDateFilter } =
     useSalesTimeFilter();
   const { dateFilter: usersFilter, setDateFilter: setUsersDateFilter } =
     useUsersTimeFilter();
   const [displaySales, setDisplaySales] = useState<string>("0");
+  const [salesDiff, setSalesDiff] = useState<number>(0);
   const [displayUsers, setDisplayUsers] = useState<number>(0);
 
   const totalSales =
@@ -28,6 +31,9 @@ function DashboardPage() {
   const salesRounded = useTransform(salesCount, (latest) =>
     Math.floor(latest).toLocaleString(),
   );
+
+  const recentSales =
+    recentOrders?.reduce((acc, order) => acc + order.total_amount, 0) || 0;
 
   const usersCount = useMotionValue(0);
   const usersRounded = useTransform(usersCount, (latest) => Math.floor(latest));
@@ -67,14 +73,29 @@ function DashboardPage() {
       <h1 className="text-3xl md:col-span-2">Dashboard</h1>
 
       <div>
-        <TimeFilter setFilter={setSalesDateFilter} filter={salesFilter} />
-        <h2 className="text-3xl font-bold">$ {displaySales}</h2>
+        <h2 className="mb-2 text-xl font-semibold">Completed Orders Revenue</h2>
+        <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+          <div className="flex items-start gap-2">
+            <h2 className="text-3xl font-bold">$ {displaySales}</h2>
+            {/* <div className="flex items-center">
+              <FaCaretUp className="mt-1 text-xl text-green-400" />
+              <span>
+                {recentSales.toFixed(2)} than last {salesFilter}
+              </span>
+            </div> */}
+          </div>
+          <TimeFilter setFilter={setSalesDateFilter} filter={salesFilter} />
+        </div>
         <SalesChart filter={salesFilter} dataset={orders} />
       </div>
 
       <div>
-        <TimeFilter setFilter={setUsersDateFilter} filter={usersFilter} />
-        <h2 className="text-3xl font-bold">{displayUsers}</h2>
+        <h2 className="mb-2 text-xl font-semibold">Signed Up Users</h2>
+
+        <div className="mb-2 flex items-center justify-between">
+          <h2 className="text-3xl font-bold">{displayUsers}</h2>
+          <TimeFilter setFilter={setUsersDateFilter} filter={usersFilter} />
+        </div>
         <UsersChart filter={usersFilter} dataset={users} />
       </div>
 

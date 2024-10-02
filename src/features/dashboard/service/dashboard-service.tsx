@@ -1,10 +1,11 @@
 import { supabase } from "../../../shared/supabase/client";
+import { DateFilter } from "../../../shared/utils/createTimeFilter";
 import { IBrandSale, ICategorySale, ISale } from "../interfaces/ISales";
 
 export async function getSalesByTime({
   period,
 }: {
-  period: "week" | "month" | "year";
+  period: DateFilter;
 }): Promise<ISale[] | null> {
   const timeFilter = {
     week: new Date(new Date().setDate(new Date().getDate() - 7)).toISOString(),
@@ -28,6 +29,48 @@ export async function getSalesByTime({
   }
 
   return data as ISale[];
+}
+
+export async function getRecentSales({
+  period,
+}: {
+  period: DateFilter;
+}): Promise<ISale[] | null> {
+  const today = new Date();
+
+  const start = new Date(today);
+  const end = new Date(today);
+
+  switch (period) {
+    case "week":
+      start.setDate(today.getDate() - 7 * 2 + 1);
+      end.setDate(today.getDate() - 7);
+
+      break;
+    case "month":
+      start.setDate(today.getDate() - 30 * 2 + 1);
+      end.setDate(today.getDate() - 30);
+      break;
+    case "year":
+      start.setDate(today.getDate() - 365 * 2 + 1);
+      end.setDate(today.getDate() - 365);
+      break;
+  }
+
+  console.log(start, end);
+
+  const { data, error } = await supabase
+    .from("orders")
+    .select("*")
+    .gte("created_at", start.toISOString())
+    .lte("created_at", end.toISOString());
+
+  if (error) {
+    console.error(error.message);
+    return null;
+  }
+
+  return data;
 }
 
 export async function getCategorySales(): Promise<ICategorySale[] | null> {

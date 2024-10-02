@@ -43,10 +43,9 @@ const UsersChart: React.FC<{
         break;
       case "month":
         start = new Date(end);
-        start.setDate(1); // First day of the current month
-        while (start <= end) {
-          timeFrames.push(new Date(start));
-          start.setDate(start.getDate() + 1);
+        start.setDate(end.getDate() - 30); // First day of the current month
+        for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+          timeFrames.push(new Date(d));
         }
         break;
       case "year":
@@ -121,13 +120,6 @@ const UsersChart: React.FC<{
     plugins: {
       legend: {
         position: "top" as const,
-      },
-      title: {
-        display: true,
-        text:
-          filter === "year"
-            ? "User Growth in the Last 12 Months"
-            : `User Growth in the Last ${filter}`,
       },
       tooltip: {
         mode: "index" as const,

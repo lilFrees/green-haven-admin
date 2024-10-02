@@ -3,6 +3,7 @@ import { getUsers } from "../../users/services/user-service";
 import {
   getBrandSales,
   getCategorySales,
+  getRecentSales,
   getSalesByTime,
 } from "../service/dashboard-service";
 import { useSalesTimeFilter } from "./useSalesTimeFilter";
@@ -12,6 +13,7 @@ export function useDashboard() {
   const { dateFilter } = useSalesTimeFilter();
   const [
     { data: orders, isLoading: ordersLoading },
+    { data: recentOrders, isLoading: recentOrdersLoading },
     { data: users, isLoading: usersLoading },
     { data: products, isLoading: productsLoading },
     { data: categorySales, isLoading: categorySalesLoading },
@@ -21,6 +23,15 @@ export function useDashboard() {
       queryKey: ["orders", dateFilter],
       queryFn: async () => {
         const result = await getSalesByTime({ period: dateFilter });
+        if (result) {
+          return result;
+        }
+      },
+    },
+    {
+      queryKey: ["recentOrders", dateFilter],
+      queryFn: async () => {
+        const result = await getRecentSales({ period: dateFilter });
         if (result) {
           return result;
         }
@@ -71,6 +82,8 @@ export function useDashboard() {
     users,
     ordersLoading,
     usersLoading,
+    recentOrders,
+    recentOrdersLoading,
     products,
     productsLoading,
     categorySales,

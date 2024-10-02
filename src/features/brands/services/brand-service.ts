@@ -39,7 +39,7 @@ export async function getBrands({
   return { brands: data, count };
 }
 
-export async function getBrandById(brandId: number): Promise<IBrand> {
+export async function getBrandById(brandId: number): Promise<IBrand | null> {
   const { data, error } = await supabase
     .from("brands")
     .select("*")
@@ -47,7 +47,8 @@ export async function getBrandById(brandId: number): Promise<IBrand> {
     .single();
 
   if (error) {
-    throw new Error(error.message);
+    console.error("Error fetching brand by id:", error);
+    return null;
   }
 
   return data;

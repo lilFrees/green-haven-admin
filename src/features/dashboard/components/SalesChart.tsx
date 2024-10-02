@@ -43,10 +43,9 @@ const SalesChart: React.FC<{
         break;
       case "month":
         start = new Date(end);
-        start.setDate(1); // First day of the current month
-        while (start <= end) {
-          timeFrames.push(new Date(start));
-          start.setDate(start.getDate() + 1);
+        start.setDate(end.getDate() - 30);
+        for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+          timeFrames.push(new Date(d));
         }
         break;
       case "year":
@@ -128,13 +127,6 @@ const SalesChart: React.FC<{
     plugins: {
       legend: {
         position: "top" as const,
-      },
-      title: {
-        display: true,
-        text:
-          filter === "year"
-            ? "Sales in the last 12 months"
-            : `Sales in the last ${filter}`,
       },
       tooltip: {
         mode: "index" as const,

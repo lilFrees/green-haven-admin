@@ -18,6 +18,10 @@ function UpdateBrandPage() {
     },
   });
 
+  if (!brand) {
+    return <div>Brand not found</div>;
+  }
+
   return (
     <div className="flex flex-col gap-5">
       <div className="flex items-center gap-10">

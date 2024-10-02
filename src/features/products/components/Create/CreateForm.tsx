@@ -29,6 +29,7 @@ import {
   getCategoriesByName,
 } from "../../services/products-service";
 import CreateImagePicker from "./CreateImagePicker";
+import { convertToWebp } from "../../../../shared/utils/convertToWebp";
 
 const schema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters long"),
@@ -98,14 +99,42 @@ function CreateForm() {
   });
 
   async function onSubmit(formData: FormData) {
+    const uploadedImages = await Promise.all(
+      images.map(async (image, i) => {
+        const compressedImage = await convertToWebp(image.file);
+
+        const { error: storageError } = await supabase.storage
+          .from("product_images")
+          .upload(
+            `product-id-${newProductId}/image-${i}.webp`,
+            compressedImage,
+            {
+              upsert: true,
+              cacheControl: "0",
+            },
+          );
+
+        if (storageError) throw storageError.message;
+
+        const {
+          data: { publicUrl },
+        } = supabase.storage
+          .from("product_images")
+          .getPublicUrl(`product-id-${newProductId}/image-${i}.webp`);
+
+        return publicUrl;
+      }),
+    );
+
     const { data, error: countError } = await supabase
       .from("products")
       .select("id");
 
-    const newProductId = data ? data.length + 1 : 1;
     if (countError) {
       throw countError.message;
     }
+
+    const newProductId = data ? data.length + 1 : 1;
 
     const { data: existingImages, error: listError } = await supabase.storage
       .from("product_images")
@@ -172,65 +201,14 @@ function CreateForm() {
       shipping_information: formData.shippingInfo,
       return_policy: formData.returnPolicy,
       is_active: formData.isActive,
+      images: uploadedImages,
+      thumbnail: uploadedImages[0],
     });
 
     if (insertError) {
       toast({
         title: "Failed to create product",
         description: insertError.message,
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-      return;
-    }
-
-    const uploadedImages = await Promise.all(
-      images.map(async (image, i) => {
-        const options: Options = {
-          maxSizeMB: 1,
-          useWebWorker: true,
-          fileType: "image/webp",
-        };
-
-        const compressedImage = await imageCompression(image.file, options);
-
-        const { error: storageError } = await supabase.storage
-          .from("product_images")
-          .upload(
-            `product-id-${newProductId}/image-${i}.webp`,
-            compressedImage,
-            {
-              upsert: true,
-              cacheControl: "0",
-            },
-          );
-
-        if (storageError) throw storageError.message;
-
-        const {
-          data: { publicUrl },
-        } = supabase.storage
-          .from("product_images")
-          .getPublicUrl(`product-id-${newProductId}/image-${i}.webp`);
-
-        return publicUrl;
-      }),
-    );
-
-    const { data: insertData, error: updateError } = await supabase
-      .from("products")
-      .update({
-        thumbnail: uploadedImages[0],
-        images: uploadedImages,
-      })
-      .eq("id", newProductId)
-      .select("thumbnail,images");
-
-    if (updateError) {
-      toast({
-        title: "Failed to upload images",
-        description: updateError.message,
         status: "error",
         duration: 5000,
         isClosable: true,
