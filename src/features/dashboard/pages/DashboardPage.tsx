@@ -1,5 +1,9 @@
 import { animate, useMotionValue, useTransform } from "framer-motion";
 import { useEffect, useState } from "react";
+import { FaCaretUp } from "react-icons/fa6";
+import BrandSales from "../components/BrandSales";
+import CategorySales from "../components/CategorySales";
+import RecentProducts from "../components/RecentProducts";
 import RecentUsers from "../components/RecentUsers";
 import SalesChart from "../components/SalesChart";
 import TimeFilter from "../components/TimeFilter";
@@ -7,11 +11,6 @@ import UsersChart from "../components/UsersChart";
 import { useDashboard } from "../hooks/useDashboard";
 import { useSalesTimeFilter } from "../hooks/useSalesTimeFilter";
 import { useUsersTimeFilter } from "../hooks/useUsersTimeFilter";
-import RecentProducts from "../components/RecentProducts";
-import BrandSales from "../components/BrandSales";
-import CategorySales from "../components/CategorySales";
-import { FaCaretUp } from "react-icons/fa6";
-import { DateFilter } from "../../../shared/utils/createTimeFilter";
 
 function DashboardPage() {
   const { orders, users, recentOrders } = useDashboard();
@@ -20,7 +19,6 @@ function DashboardPage() {
   const { dateFilter: usersFilter, setDateFilter: setUsersDateFilter } =
     useUsersTimeFilter();
   const [displaySales, setDisplaySales] = useState<string>("0");
-  const [salesDiff, setSalesDiff] = useState<number>(0);
   const [displayUsers, setDisplayUsers] = useState<number>(0);
 
   const totalSales =
@@ -77,12 +75,12 @@ function DashboardPage() {
         <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-start gap-2">
             <h2 className="text-3xl font-bold">$ {displaySales}</h2>
-            {/* <div className="flex items-center">
+            <div className="flex items-center">
               <FaCaretUp className="mt-1 text-xl text-green-400" />
               <span>
                 {recentSales.toFixed(2)} than last {salesFilter}
               </span>
-            </div> */}
+            </div>
           </div>
           <TimeFilter setFilter={setSalesDateFilter} filter={salesFilter} />
         </div>
