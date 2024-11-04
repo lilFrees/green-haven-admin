@@ -1,5 +1,6 @@
 "use client";
 
+import { twMerge } from "tailwind-merge";
 import {
   Button,
   Input,
@@ -62,12 +63,18 @@ function CategoriesPage() {
           pageRangeDisplayed={2}
           nextLabel={
             <FaChevronRight
-              className={`text-xl ${page !== maxPages - 1 ? "text-gray-700" : "text-gray-400"}`}
+              className={twMerge(
+                "text-xl",
+                page !== maxPages - 1 ? "text-gray-700" : "text-gray-400",
+              )}
             />
           }
           previousLabel={
             <FaChevronLeft
-              className={`text-xl ${page !== 0 ? "text-gray-700" : "text-gray-400"}`}
+              className={twMerge(
+                "text-xl",
+                page !== 0 ? "text-gray-700" : "text-gray-400",
+              )}
             />
           }
           pageLinkClassName="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-full"

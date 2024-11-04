@@ -32,7 +32,7 @@ const createFilterStore = ({ properties }: { properties: string[] }) =>
     setPage: (page) => set({ page }),
     nextPage: () => set((state) => ({ page: state.page + 1 })),
     prevPage: () => set((state) => ({ page: state.page - 1 })),
-    setLimit: (limit) => set({ limit }),
+    setLimit: (limit) => set({ limit, page: 0 }),
     setOrderBy: (orderBy) => set({ orderBy }),
     setAscending: (ascending) => set({ ascending }),
   }));
